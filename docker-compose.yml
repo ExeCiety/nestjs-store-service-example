@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  app:
+    container_name: paninti-store-service-app
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: development
+    volumes:
+      - .:/usr/src/app
+      - ./node_modules:/usr/src/app/node_modules
+    command: npm run start:dev
+    ports:
+      - 8002:3000
+    networks:
+      - paninti-service
+
+  db:
+    container_name: paninti-store-service-db
+    image: mongo:5.0.6-focal
+    environment: 
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: admin1234!
+    ports:
+      - 7002:27017
+    networks:
+      - paninti-service
+
+networks:
+  paninti-service:
+    name: paninti-service
+    driver: bridge
